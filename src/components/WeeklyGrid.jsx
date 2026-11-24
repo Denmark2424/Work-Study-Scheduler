@@ -1,6 +1,7 @@
 /* src/components/WeeklyGrid.jsx */
 import { useState } from 'react'
 import { useApp } from '../context/AppContext.jsx'
+import { Lock } from 'lucide-react'
 import styles from './WeeklyGrid.module.css'
 
 const TYPE_LABELS = {
@@ -17,15 +18,16 @@ const TYPE_CLASS = {
   free: styles.cellFree,
 }
 
-export default function WeeklyGrid({ readonly = false, onCellClick }) {
+export default function WeeklyGrid({ readonly = false, onCellClick, lockedDays = [] }) {
   const { schedule, DAYS, TIME_SLOTS } = useApp()
   const [selectedDay, setSelectedDay] = useState('ALL')
 
   const visibleDays = selectedDay === 'ALL' ? DAYS : [selectedDay]
+  const lockedSet = new Set(lockedDays)
 
   return (
     <div className={styles.container}>
-      {/* Responsive Day Filter Tabs (especially great for phones and tablets) */}
+      {/* Responsive Day Filter Tabs */}
       <div className={styles.dayFilterBar}>
         <span className={styles.filterLabel}>View:</span>
         <div className={styles.filterPills}>
@@ -40,10 +42,11 @@ export default function WeeklyGrid({ readonly = false, onCellClick }) {
             <button
               key={day}
               type="button"
-              className={`${styles.filterPill} ${selectedDay === day ? styles.filterPillActive : ''}`}
+              className={`${styles.filterPill} ${selectedDay === day ? styles.filterPillActive : ''} ${lockedSet.has(day) ? styles.filterPillLocked : ''}`}
               onClick={() => setSelectedDay(day)}
             >
               {day}
+              {lockedSet.has(day) && <Lock size={10} style={{ marginLeft: 3, verticalAlign: 'middle' }} />}
             </button>
           ))}
         </div>
@@ -56,7 +59,17 @@ export default function WeeklyGrid({ readonly = false, onCellClick }) {
             <tr>
               <th className={styles.timeHeader}>Time Slot</th>
               {visibleDays.map(d => (
-                <th key={d} className={styles.dayHeader}>{d}</th>
+                <th
+                  key={d}
+                  className={`${styles.dayHeader} ${lockedSet.has(d) ? styles.dayHeaderLocked : ''}`}
+                >
+                  {d}
+                  {lockedSet.has(d) && (
+                    <span style={{ marginLeft: 4, opacity: 0.6 }}>
+                      <Lock size={11} style={{ verticalAlign: 'middle' }} />
+                    </span>
+                  )}
+                </th>
               ))}
             </tr>
           </thead>
@@ -66,24 +79,39 @@ export default function WeeklyGrid({ readonly = false, onCellClick }) {
                 <td className={styles.timeCell}>{slot}</td>
                 {visibleDays.map(day => {
                   const type = schedule[day]?.[slot]
-                  const cls = type ? TYPE_CLASS[type] : styles.cellEmpty
+                  const isLocked = lockedSet.has(day)
+                  const cls = type ? TYPE_CLASS[type] : (isLocked ? styles.cellLocked : styles.cellEmpty)
+                  const interactive = !readonly && !isLocked
                   return (
                     <td
                       key={day}
-                      className={`${styles.cell} ${cls} ${!readonly && !type ? styles.cellClickable : ''} ${!readonly && type ? styles.cellEditable : ''}`}
-                      onClick={() => !readonly && onCellClick && onCellClick(day, slot, type)}
-                      title={type ? `${TYPE_LABELS[type]} (${day} ${slot})` : readonly ? '' : `Click to add (${day} ${slot})`}
-                      role={!readonly ? 'button' : undefined}
-                      tabIndex={!readonly ? 0 : undefined}
+                      className={`${styles.cell} ${cls} ${interactive && !type ? styles.cellClickable : ''} ${interactive && type ? styles.cellEditable : ''}`}
+                      onClick={() => interactive && onCellClick && onCellClick(day, slot, type)}
+                      title={
+                        isLocked
+                          ? `${day} is locked — upgrade to edit all 7 days`
+                          : type
+                            ? `${TYPE_LABELS[type]} (${day} ${slot})`
+                            : readonly
+                              ? ''
+                              : `Click to add (${day} ${slot})`
+                      }
+                      role={interactive ? 'button' : undefined}
+                      tabIndex={interactive ? 0 : undefined}
                       onKeyDown={(e) => {
-                        if (!readonly && onCellClick && (e.key === 'Enter' || e.key === ' ')) {
+                        if (interactive && onCellClick && (e.key === 'Enter' || e.key === ' ')) {
                           e.preventDefault()
                           onCellClick(day, slot, type)
                         }
                       }}
                     >
-                      {type && (
+                      {type && !isLocked && (
                         <span className={styles.label}>{TYPE_LABELS[type]}</span>
+                      )}
+                      {isLocked && (
+                        <span className={styles.lockedLabel}>
+                          <Lock size={12} />
+                        </span>
                       )}
                     </td>
                   )

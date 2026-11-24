@@ -1,0 +1,630 @@
+/* src/pages/ProfilePage.module.css */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 1040px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.headerActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Main Grid Layout */
+.profileLayout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+/* -------------------------------------------------------------
+   EXACT ID CARD AS IN PICTURE
+   Deep navy background, rounded pill-like corners, white text
+   ------------------------------------------------------------- */
+.idCardWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.idCard {
+  width: 100%;
+  max-width: 320px;
+  background-color: #10304b; /* Exact color from picture: rgb(16, 48, 75) */
+  border-radius: 28px;
+  padding: 24px 20px 32px 20px;
+  box-shadow: 0 16px 36px rgba(16, 48, 75, 0.38), 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.idCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 44px rgba(16, 48, 75, 0.45), 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Header badge on the card */
+.cardBadge {
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 14.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 18px;
+  font-family: inherit;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Photo container */
+.photoContainer {
+  width: 100%;
+  max-width: 270px;
+  aspect-ratio: 180 / 130;
+  background-color: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.photoOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  padding: 10px;
+  text-align: center;
+}
+
+.photoContainer:hover .photoOverlay,
+.photoContainer:focus-visible .photoOverlay {
+  opacity: 1;
+}
+
+.photoOverlayText {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.photoOverlayHint {
+  font-size: 11px;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.cardActions {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  max-width: 320px;
+  justify-content: center;
+}
+
+.cardActionBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cardActionBtn:hover {
+  background: var(--surface-2);
+  border-color: var(--brand-light);
+  color: var(--brand);
+}
+
+.cardActionBtnActive {
+  background: #ede9fe;
+  color: var(--brand);
+  border-color: var(--brand-light);
+}
+
+/* Edit Form Photo Box */
+.formPhotoSection {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border);
+  margin-bottom: 8px;
+}
+
+.formPhotoThumb {
+  width: 100px;
+  height: 72px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  background: #000;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+.formPhotoThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.formPhotoControls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.formPhotoTitle {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.formPhotoHint {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.formPhotoBtnRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photoPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #94a3b8;
+  transition: all 0.2s ease;
+}
+
+.photoPlaceholderText {
+  font-size: 12px;
+  font-weight: 600;
+  color: #cbd5e1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cardEmptyDetails {
+  min-height: 24px;
+}
+
+/* Card details section */
+.cardContent {
+  width: 100%;
+  padding: 0 6px;
+}
+
+.cardName {
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
+  word-break: break-word;
+}
+
+.cardDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.cardDetailLine {
+  color: #f1f5f9;
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.cardWatermark {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.cardChip {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #93c5fd;
+  background: rgba(147, 197, 253, 0.15);
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.cardVerified {
+  font-size: 11px;
+  color: #86efac;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------
+   RIGHT COLUMN: DETAILED SECTIONS & INFORMATION PANELS
+   ------------------------------------------------------------- */
+.contentArea {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.panelTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Info Grid */
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.infoLabel {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.infoValue {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badgeWork {
+  background: var(--work-bg);
+  color: var(--work-text);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.badgeStudent {
+  background: var(--class-bg);
+  color: var(--class-text);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-block;
+}
+
+/* Quick Stats Bar */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.statCard {
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid var(--border);
+}
+
+.statValue {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.statLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Edit Mode Form */
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formGroupFull {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.formInput {
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.formInput:focus {
+  border-color: var(--brand);
+}
+
+.formActions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Change Password Form Styles */
+.passwordForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 620px;
+}
+
+.passwordField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.passwordInputWrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.passwordInput {
+  width: 100%;
+  padding: 10px 42px 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.passwordInput:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+}
+
+.passwordToggleBtn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+
+.passwordToggleBtn:hover {
+  color: var(--text);
+}
+
+.passwordHint {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.passwordMsgError {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.passwordMsgSuccess {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #16a34a;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.passwordActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+/* Responsive queries */
+@media (max-width: 860px) {
+  .profileLayout {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .idCardWrapper {
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .idCard {
+    max-width: 100%;
+  }
+
+  .contentArea {
+    width: 100%;
+  }
+
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .headerActions {
+    width: 100%;
+  }
+
+  .statsRow {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,11 +1,17 @@
 /* src/pages/DeadlinesPage.jsx */
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useApp } from '../context/AppContext.jsx'
-import { Plus, Trash2, Pencil, AlertTriangle, CheckCircle } from 'lucide-react'
+import { Plus, Trash2, Pencil, AlertTriangle, CheckCircle, Lock, Zap } from 'lucide-react'
 import styles from './DeadlinesPage.module.css'
 
+const BASIC_DEADLINE_LIMIT = 3
+
 export default function DeadlinesPage() {
-  const { deadlines, addDeadline, updateDeadline, removeDeadline, conflicts, DAYS, TIME_SLOTS } = useApp()
+  const { user, deadlines, addDeadline, updateDeadline, removeDeadline, conflicts, DAYS, TIME_SLOTS } = useApp()
+
+  const isPremium = user?.plan === 'student'
+  const atLimit = !isPremium && deadlines.length >= BASIC_DEADLINE_LIMIT
 
   const [editingId, setEditingId] = useState(null)
   const [showForm, setShowForm] = useState(false)
@@ -45,6 +51,9 @@ export default function DeadlinesPage() {
     e.preventDefault()
     if (!form.title.trim()) return
 
+    // Block adding new deadlines past limit for Basic plan
+    if (!editingId && atLimit) return
+
     if (editingId) {
       updateDeadline(editingId, form)
       setEditingId(null)
@@ -56,7 +65,8 @@ export default function DeadlinesPage() {
     setShowForm(false)
   }
 
-  const conflictIds = new Set(conflicts.map(c => c.id))
+  const visibleConflictList = isPremium ? conflicts : conflicts.slice(0, 1)
+  const conflictIds = new Set(visibleConflictList.map(c => c.id))
 
   return (
     <div className={styles.page}>
@@ -70,16 +80,46 @@ export default function DeadlinesPage() {
           onClick={() => {
             if (showForm) {
               handleCancel()
+            } else if (atLimit) {
+              // do nothing, button is styled as locked
             } else {
               setEditingId(null)
               setForm({ title: '', subject: '', day: 'MON', time: '8–9 AM', urgent: false })
               setShowForm(true)
             }
           }}
+          disabled={atLimit && !showForm}
+          title={atLimit ? 'Upgrade to Student Plan for unlimited deadlines' : undefined}
+          style={atLimit ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}
         >
-          {showForm ? 'Cancel' : <><Plus size={16} /> Add Deadline</>}
+          {showForm ? 'Cancel' : atLimit ? <><Lock size={15} /> Limit Reached</> : <><Plus size={16} /> Add Deadline</>}
         </button>
       </div>
+
+      {/* Basic plan limit banner */}
+      {!isPremium && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          background: '#fefce8',
+          border: '1px solid #fde68a',
+          borderRadius: 'var(--radius-sm)',
+          padding: '10px 16px',
+          fontSize: 13,
+          color: '#92400e',
+          marginBottom: 4,
+        }}>
+          <Lock size={15} color="#d97706" style={{ flexShrink: 0 }} />
+          <span>
+            <strong>Basic Plan:</strong> You can add up to {BASIC_DEADLINE_LIMIT} deadlines.{' '}
+            {deadlines.length}/{BASIC_DEADLINE_LIMIT} used.{' '}
+            <Link to="/subscription" style={{ color: 'var(--brand)', fontWeight: 600, textDecoration: 'underline' }}>
+              Upgrade for unlimited <Zap size={12} style={{ verticalAlign: 'middle' }} />
+            </Link>
+          </span>
+        </div>
+      )}
 
       {/* Add / Edit form */}
       {showForm && (

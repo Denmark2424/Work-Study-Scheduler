@@ -1,6 +1,6 @@
 /* src/pages/LoginPage.jsx */
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useApp } from '../context/AppContext.jsx'
 import { AlertCircle } from 'lucide-react'
 import styles from './LoginPage.module.css'
@@ -12,23 +12,27 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [isExiting, setIsExiting] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
     setLoading(true)
-    await new Promise(r => setTimeout(r, 600)) // simulate network
-    const ok = login(identifier, password)
-    setLoading(false)
-    if (ok) {
+    const res = await login(identifier, password)
+    if (res === true || res?.success) {
+      setIsSuccess(true)
+      setIsExiting(true)
+      await new Promise(r => setTimeout(r, 450))
       navigate('/')
     } else {
-      setError('Invalid email/username or password. Try: kenneth@student.edu / password123')
+      setLoading(false)
+      setError(res?.error || 'Invalid email/username or password.')
     }
   }
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} ${isExiting ? styles.pageExiting : ''}`}>
       {/* Left panel */}
       <div className={styles.hero}>
         <div className={styles.heroContent}>
@@ -88,18 +92,19 @@ export default function LoginPage() {
             )}
 
             <button
-              className={`btn btn-primary ${styles.submitBtn}`}
+              className={`btn btn-primary ${styles.submitBtn} ${isSuccess ? styles.submitSuccess : ''}`}
               type="submit"
-              disabled={loading}
+              disabled={loading || isSuccess}
             >
-              {loading ? 'Logging in…' : 'Log In →'}
+              {isSuccess ? '✓ Welcome back!' : loading ? 'Logging in…' : 'Log In →'}
             </button>
           </form>
 
-          <div className={styles.hint}>
-            <strong>Demo credentials</strong><br />
-            Email: <code>kenneth@student.edu</code><br />
-            Password: <code>password123</code>
+          <div className={styles.switchPrompt}>
+            Don't have an account?{' '}
+            <Link to="/signup" className={styles.switchLink}>
+              Sign up
+            </Link>
           </div>
         </div>
       </div>

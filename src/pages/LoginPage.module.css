@@ -3,6 +3,25 @@
   display: flex;
   min-height: 100vh;
   width: 100%;
+  animation: pageFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pageExiting {
+  opacity: 0;
+  transform: scale(0.985);
+  pointer-events: none;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ---- Left Hero Panel ---- */
@@ -34,6 +53,18 @@
   max-width: 440px;
   position: relative;
   z-index: 1;
+  animation: heroContentFade 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes heroContentFade {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .heroLogo {
@@ -93,6 +124,18 @@
 .formCard {
   width: 100%;
   max-width: 390px;
+  animation: cardSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes cardSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .formHeader {
@@ -170,6 +213,34 @@
   border-radius: var(--radius-sm);
   min-height: 48px;
   box-shadow: 0 2px 4px rgba(79, 70, 229, 0.25);
+  transition: all 0.25s ease;
+}
+
+.submitSuccess {
+  background: var(--success) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35) !important;
+  transform: scale(1.01);
+}
+
+.switchPrompt {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.switchLink {
+  color: var(--brand);
+  font-weight: 700;
+  text-decoration: none;
+  margin-left: 5px;
+  transition: color 0.15s ease;
+}
+
+.switchLink:hover {
+  text-decoration: underline;
+  color: var(--brand-dark);
 }
 
 .hint {

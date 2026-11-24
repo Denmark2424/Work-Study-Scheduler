@@ -60,6 +60,14 @@
   border-color: var(--brand) !important;
 }
 
+.filterPillLocked {
+  opacity: 0.55;
+  cursor: default;
+  background: #f1f5f9;
+  border-style: dashed;
+  color: #94a3b8;
+}
+
 /* Grid Wrapper with Sticky Time Column */
 .wrapper {
   overflow-x: auto;
@@ -95,6 +103,12 @@
 .dayHeader {
   text-align: center;
   border-left: 1px solid var(--border);
+}
+
+.dayHeaderLocked {
+  color: #94a3b8 !important;
+  background: #f8fafc !important;
+  opacity: 0.7;
 }
 
 /* Sticky Time Column */
@@ -163,6 +177,26 @@
 .cellWork   { background: var(--work-bg); }
 .cellStudy  { background: var(--study-bg); }
 .cellFree   { background: var(--free-bg); }
+
+/* Locked day cells (Basic plan) */
+.cellLocked {
+  background: repeating-linear-gradient(
+    45deg,
+    #f8fafc,
+    #f8fafc 4px,
+    #e2e8f0 4px,
+    #e2e8f0 8px
+  );
+  cursor: not-allowed;
+}
+
+.lockedLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  opacity: 0.6;
+}
 
 .label {
   display: inline-block;

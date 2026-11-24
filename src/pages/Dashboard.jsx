@@ -3,15 +3,12 @@ import { Link } from 'react-router-dom'
 import { useApp } from '../context/AppContext.jsx'
 import {
   Calendar, FileText, AlertTriangle, CheckCircle,
-  BookOpen, Briefcase, Coffee, Clock
+  BookOpen, Briefcase, Coffee, Clock, Lock, Zap
 } from 'lucide-react'
 import WeeklyGrid from '../components/WeeklyGrid.jsx'
 import styles from './Dashboard.module.css'
 
-function statColor(type) {
-  const map = { class: '#3b82f6', work: '#f59e0b', study: '#22c55e', free: '#94a3b8' }
-  return map[type] || '#94a3b8'
-}
+const BASIC_DEADLINE_LIMIT = 3
 
 function countCells(schedule, type) {
   let n = 0
@@ -25,6 +22,8 @@ function countCells(schedule, type) {
 
 export default function Dashboard() {
   const { user, schedule, deadlines, conflicts, DAYS, TIME_SLOTS } = useApp()
+
+  const isPremium = user?.plan === 'student'
 
   const classHours = countCells(schedule, 'class')
   const workHours = countCells(schedule, 'work')
@@ -43,32 +42,91 @@ export default function Dashboard() {
       {/* Header */}
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title}>Good morning, {user?.name?.split(' ')[0]} 👋</h1>
+          <h1 className={styles.title}>Good morning, {user?.name?.split(' ')[0] || 'Student'} 👋</h1>
           <p className={styles.subtitle}>Here's your week at a glance.</p>
         </div>
         <div className={styles.headerActions}>
-          <Link to="/schedule" className="btn btn-primary">
-            <Calendar size={16} /> Edit Schedule
-          </Link>
+          {isPremium ? (
+            <Link to="/schedule" className="btn btn-primary">
+              <Calendar size={16} /> Edit Schedule
+            </Link>
+          ) : (
+            <Link to="/schedule" className="btn btn-secondary">
+              <Calendar size={16} /> View Schedule
+            </Link>
+          )}
         </div>
       </div>
 
-      {/* Conflict banner */}
-      {conflicts.length > 0 && (
-        <Link to="/conflicts" className={styles.conflictBanner}>
-          <AlertTriangle size={18} />
+      {/* Upgrade banner for Basic plan */}
+      {!isPremium && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          background: 'linear-gradient(135deg, #ede9fe, #dbeafe)',
+          border: '1px solid #c4b5fd',
+          borderRadius: 'var(--radius-sm)',
+          padding: '12px 18px',
+          fontSize: 13,
+          color: '#4c1d95',
+        }}>
+          <Zap size={16} color="#7c3aed" style={{ flexShrink: 0 }} />
           <span>
-            <strong>{conflicts.length} conflict{conflicts.length > 1 ? 's' : ''} detected</strong> —
-            a deadline overlaps with your work shift. Tap to review.
+            <strong>You're on the Basic Plan.</strong> Unlock full schedule editing, unlimited deadlines,
+            automatic conflict detection, and tips by upgrading.{' '}
+            <Link to="/subscription" style={{ color: '#7c3aed', fontWeight: 700, textDecoration: 'underline' }}>
+              Upgrade now →
+            </Link>
+          </span>
+        </div>
+      )}
+
+      {/* Conflict banner — Premium: all auto-detected, Basic: 1 conflict alert */}
+      {isPremium ? (
+        <>
+          {conflicts.length > 0 && (
+            <Link to="/conflicts" className={styles.conflictBanner}>
+              <AlertTriangle size={18} />
+              <span>
+                <strong>{conflicts.length} conflict{conflicts.length > 1 ? 's' : ''} detected</strong> —
+                a deadline overlaps with your work shift. Tap to review.
+              </span>
+              <span className={styles.bannerArrow}>→</span>
+            </Link>
+          )}
+          {conflicts.length === 0 && (
+            <div className={styles.clearBanner}>
+              <CheckCircle size={18} />
+              <span><strong>All clear!</strong> No conflicts between your deadlines and work shifts.</span>
+            </div>
+          )}
+        </>
+      ) : conflicts.length > 0 ? (
+        <Link to="/conflicts" className={styles.conflictBanner} style={{ borderLeftColor: '#f59e0b' }}>
+          <AlertTriangle size={18} color="#d97706" />
+          <span>
+            <strong>1 conflict alert notified (Basic Plan)</strong> —
+            tap to review on the Conflicts page. Upgrade to Student Plan to reveal all conflicts.
           </span>
           <span className={styles.bannerArrow}>→</span>
         </Link>
-      )}
-
-      {conflicts.length === 0 && (
-        <div className={styles.clearBanner}>
-          <CheckCircle size={18} />
-          <span><strong>All clear!</strong> No conflicts between your deadlines and work shifts.</span>
+      ) : (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          background: '#f8fafc',
+          border: '1px solid #e2e8f0',
+          borderRadius: 'var(--radius-sm)',
+          padding: '10px 16px',
+          fontSize: 13,
+          color: '#64748b',
+        }}>
+          <CheckCircle size={16} color="var(--success)" style={{ flexShrink: 0 }} />
+          <span>
+            <strong>All clear:</strong> No active conflicts detected between your deadlines and work shifts.
+          </span>
         </div>
       )}
 
@@ -92,7 +150,7 @@ export default function Dashboard() {
         <div className={styles.gridHeader}>
           <h2>My Week</h2>
           <Link to="/schedule" className="btn btn-secondary" style={{ fontSize: 13 }}>
-            View full schedule
+            {isPremium ? 'Edit schedule' : 'View schedule'}
           </Link>
         </div>
         <WeeklyGrid readonly />
@@ -102,16 +160,24 @@ export default function Dashboard() {
       <div className={`card ${styles.deadlinesCard}`}>
         <div className={styles.gridHeader}>
           <h2>Upcoming Deadlines</h2>
-          <Link to="/deadlines" className="btn btn-secondary" style={{ fontSize: 13 }}>
-            <FileText size={14} /> Manage
-          </Link>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {!isPremium && (
+              <span style={{ fontSize: 12, color: '#94a3b8', display: 'flex', alignItems: 'center', gap: 4 }}>
+                <Lock size={12} /> {deadlines.length}/{BASIC_DEADLINE_LIMIT}
+              </span>
+            )}
+            <Link to="/deadlines" className="btn btn-secondary" style={{ fontSize: 13 }}>
+              <FileText size={14} /> Manage
+            </Link>
+          </div>
         </div>
         {deadlines.length === 0 ? (
           <p className={styles.empty}>No deadlines added yet.</p>
         ) : (
           <div className={styles.deadlineList}>
             {deadlines.map(dl => {
-              const isConflict = conflicts.some(c => c.id === dl.id)
+              const activeConflicts = isPremium ? conflicts : conflicts.slice(0, 1)
+              const isConflict = activeConflicts.some(c => c.id === dl.id)
               return (
                 <div key={dl.id} className={`${styles.deadlineRow} ${isConflict ? styles.conflictRow : ''}`}>
                   <div className={styles.dlLeft}>

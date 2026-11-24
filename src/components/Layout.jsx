@@ -14,6 +14,7 @@ const navItems = [
   { to: '/deadlines',    icon: FileText,        label: 'Deadlines' },
   { to: '/conflicts',    icon: AlertTriangle,   label: 'Conflicts' },
   { to: '/subscription', icon: CreditCard,      label: 'Subscription' },
+  { to: '/profile',      icon: User,            label: 'Profile' },
 ]
 
 export default function Layout() {
@@ -21,11 +22,37 @@ export default function Layout() {
   const navigate = useNavigate()
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const [imgError, setImgError] = useState(false)
+  const [localPhoto, setLocalPhoto] = useState(null)
 
   // Auto-close mobile drawer when route changes
   useEffect(() => {
     setMobileOpen(false)
   }, [location.pathname])
+
+  // Sync uploaded photo from user profile or local storage
+  useEffect(() => {
+    setImgError(false)
+    try {
+      const storageKey = `ws_profile_${user?.id || user?.email || 'user'}`
+      const saved = localStorage.getItem(storageKey)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (parsed?.photo) {
+          setLocalPhoto(parsed.photo)
+          return
+        }
+      }
+      setLocalPhoto(null)
+    } catch (e) {
+      setLocalPhoto(null)
+    }
+  }, [user, location.pathname])
+
+  const avatarPhoto = !imgError ? (user?.avatar_url || localPhoto || null) : null
+  const isPremium = user?.plan === 'student'
+  const notifyConflictCount = isPremium ? conflicts.length : Math.min(conflicts.length, 1)
 
   // Prevent background scroll when mobile drawer is open
   useEffect(() => {
@@ -37,13 +64,15 @@ export default function Layout() {
     return () => { document.body.style.overflow = '' }
   }, [mobileOpen])
 
-  function handleLogout() {
-    logout()
+  async function handleLogout() {
+    setIsLoggingOut(true)
+    await new Promise(r => setTimeout(r, 450))
+    await logout()
     navigate('/login')
   }
 
   return (
-    <div className={styles.shell}>
+    <div className={`${styles.shell} ${isLoggingOut ? styles.shellExiting : ''}`}>
       {/* Mobile Top Header */}
       <header className={styles.mobileHeader}>
         <button
@@ -58,10 +87,10 @@ export default function Layout() {
           <img src="/logo.png" alt="Work-Study Coordinator" className={styles.mobileLogo} />
         </div>
 
-        {conflicts.length > 0 ? (
+        {notifyConflictCount > 0 ? (
           <NavLink to="/conflicts" className={styles.mobileAlertPill} title="View conflicts">
             <AlertTriangle size={15} />
-            <span>{conflicts.length}</span>
+            <span>{notifyConflictCount}</span>
           </NavLink>
         ) : (
           <div className={styles.mobilePlaceholder} />
@@ -97,8 +126,8 @@ export default function Layout() {
               >
                 <Icon size={18} />
                 <span>{label}</span>
-                {label === 'Conflicts' && conflicts.length > 0 && (
-                  <span className={styles.badge}>{conflicts.length}</span>
+                {label === 'Conflicts' && notifyConflictCount > 0 && (
+                  <span className={styles.badge}>{notifyConflictCount}</span>
                 )}
               </NavLink>
             ))}
@@ -106,15 +135,34 @@ export default function Layout() {
         </div>
 
         <div className={styles.sidebarBottom}>
-          <div className={styles.userCard}>
-            <div className={styles.avatar}><User size={18} color="var(--brand)" /></div>
-            <div className={styles.userInfo}>
-              <div className={styles.userName}>{user?.name}</div>
-              <div className={styles.userEmail}>{user?.email}</div>
+          <NavLink
+            to="/profile"
+            className={styles.userCard}
+            title="View & Edit Profile"
+          >
+            <div className={styles.avatar}>
+              {avatarPhoto ? (
+                <img
+                  src={avatarPhoto}
+                  alt={user?.name || 'Account'}
+                  className={styles.avatarImg}
+                  onError={() => setImgError(true)}
+                />
+              ) : (
+                <User size={18} color="var(--brand)" />
+              )}
             </div>
-          </div>
-          <button className={`btn btn-secondary ${styles.logoutBtn}`} onClick={handleLogout}>
-            <LogOut size={16} /> Logout
+            <div className={styles.userInfo}>
+              <div className={styles.userName}>{user?.name || 'Account'}</div>
+              <div className={styles.userEmail}>{user?.email || ''}</div>
+            </div>
+          </NavLink>
+          <button
+            className={`btn btn-secondary ${styles.logoutBtn}`}
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+          >
+            <LogOut size={16} /> {isLoggingOut ? 'Logging out…' : 'Logout'}
           </button>
         </div>
       </aside>
