@@ -1,0 +1,272 @@
+/* src/pages/Dashboard.module.css */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-top: 3px;
+}
+
+.headerActions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Banners */
+.conflictBanner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: #fff7ed;
+  border: 1.5px solid #fed7aa;
+  border-radius: var(--radius-sm);
+  color: #9a3412;
+  font-size: 14px;
+  line-height: 1.4;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.conflictBanner:hover {
+  background: #ffedd5;
+  transform: translateY(-1px);
+}
+.bannerArrow {
+  margin-left: auto;
+  font-weight: 700;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.clearBanner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: #f0fdf4;
+  border: 1.5px solid #bbf7d0;
+  border-radius: var(--radius-sm);
+  color: #166534;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Stats Grid */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.statCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border-radius: var(--radius-sm);
+  transition: transform 0.15s ease;
+}
+.statCard:hover {
+  transform: translateY(-2px);
+}
+
+.statIcon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.statValue {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.statLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Grid card */
+.gridCard {
+  padding: 20px;
+  overflow: hidden;
+}
+
+.gridHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.gridHeader h2 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Deadlines */
+.deadlinesCard {
+  padding: 20px;
+}
+
+.empty {
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 16px 0;
+  text-align: center;
+}
+
+.deadlineList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.deadlineRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  gap: 12px;
+  transition: all 0.15s ease;
+}
+.deadlineRow:hover {
+  border-color: #cbd5e1;
+}
+
+.conflictRow {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.dlLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.dlTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  word-break: break-word;
+}
+
+.dlMeta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ============================================================
+   RESPONSIVE BREAKPOINTS (CP, Tablet, iPad, Laptop, PC)
+   ============================================================ */
+
+/* Tablet & iPad (<= 991px) */
+@media (max-width: 991px) {
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+/* Mobile CP / Cellphone (<= 639px) */
+@media (max-width: 639px) {
+  .page {
+    gap: 16px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .headerActions {
+    width: 100%;
+  }
+  .headerActions a,
+  .headerActions button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .statCard {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+  .statIcon {
+    width: 38px;
+    height: 38px;
+  }
+  .statValue {
+    font-size: 20px;
+  }
+  .statLabel {
+    font-size: 11px;
+  }
+
+  .gridCard,
+  .deadlinesCard {
+    padding: 14px;
+  }
+
+  .deadlineRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .deadlineRow > span {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 360px) {
+  .statsRow {
+    grid-template-columns: 1fr;
+  }
+}

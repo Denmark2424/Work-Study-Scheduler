@@ -1,0 +1,209 @@
+/* src/components/WeeklyGrid.module.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Day Filter Bar */
+.dayFilterBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.filterLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.filterPills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 2px;
+  scrollbar-width: none;
+}
+.filterPills::-webkit-scrollbar {
+  display: none;
+}
+
+.filterPill {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.filterPill:hover {
+  background: var(--border);
+  color: var(--text);
+}
+.filterPillActive {
+  background: var(--brand) !important;
+  color: #ffffff !important;
+  border-color: var(--brand) !important;
+}
+
+/* Grid Wrapper with Sticky Time Column */
+.wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 640px;
+  font-size: 12.5px;
+}
+
+/* Headers */
+.timeHeader, .dayHeader {
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  border-bottom: 1.5px solid var(--border);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.dayHeader {
+  text-align: center;
+  border-left: 1px solid var(--border);
+}
+
+/* Sticky Time Column */
+.timeHeader {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  background: #f1f5f9;
+  text-align: left;
+  min-width: 110px;
+  border-right: 1.5px solid var(--border);
+}
+
+.timeCell {
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  background: #f8fafc;
+  padding: 8px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+  border-right: 1.5px solid var(--border);
+  box-shadow: 2px 0 4px -2px rgba(0, 0, 0, 0.06);
+}
+
+/* Table Cells */
+.cell {
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+  text-align: center;
+  vertical-align: middle;
+  height: 42px;
+  min-width: 75px;
+  transition: all 0.12s ease;
+  user-select: none;
+}
+
+.cellEmpty {
+  background: var(--surface);
+}
+
+.cellClickable {
+  cursor: pointer;
+}
+.cellClickable:hover,
+.cellClickable:focus-visible {
+  background: #f3f0ff;
+  outline: none;
+}
+
+.cellEditable {
+  cursor: pointer;
+}
+.cellEditable:hover,
+.cellEditable:focus-visible {
+  filter: brightness(0.92);
+  outline: none;
+}
+
+/* Color states matching the presentation */
+.cellClass  { background: var(--class-bg); }
+.cellWork   { background: var(--work-bg); }
+.cellStudy  { background: var(--study-bg); }
+.cellFree   { background: var(--free-bg); }
+
+.label {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+}
+
+.scrollHint {
+  display: none;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 2px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .scrollHint {
+    display: block;
+  }
+  .table {
+    min-width: 580px;
+  }
+  .cell {
+    height: 38px;
+    padding: 6px 4px;
+  }
+  .label {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .timeHeader, .timeCell {
+    min-width: 95px;
+    padding: 6px 8px;
+    font-size: 10.5px;
+  }
+  .cell {
+    min-width: 65px;
+  }
+}

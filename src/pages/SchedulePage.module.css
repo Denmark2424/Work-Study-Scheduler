@@ -1,0 +1,165 @@
+/* src/pages/SchedulePage.module.css */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.header {
+  margin-bottom: 2px;
+}
+.title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+}
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  flex-wrap: wrap;
+}
+
+.toolbarLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-right: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.toolBtn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  transition: all 0.15s ease;
+  opacity: 0.65;
+  cursor: pointer;
+  min-height: 36px;
+}
+.toolBtn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+.toolActive {
+  opacity: 1 !important;
+  border-color: var(--text) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.tool_class  { background: var(--class-bg);    color: var(--class-text); }
+.tool_work   { background: var(--work-bg);     color: var(--work-text); }
+.tool_study  { background: var(--study-bg);    color: var(--study-text); }
+.tool_free   { background: var(--free-bg);     color: var(--free-text); }
+
+.hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--surface-2);
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+
+.gridCard {
+  padding: 20px;
+  overflow: hidden;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 18px;
+  flex-wrap: wrap;
+}
+.legendTitle {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.legendItems {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+}
+.legendDot {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+}
+.dot_class  { background: var(--class-bg); border: 1.5px solid var(--class-text); }
+.dot_work   { background: var(--work-bg);  border: 1.5px solid var(--work-text); }
+.dot_study  { background: var(--study-bg); border: 1.5px solid var(--study-text); }
+.dot_free   { background: var(--free-bg);  border: 1.5px solid var(--free-text); }
+
+/* ============================================================
+   RESPONSIVE BREAKPOINTS (CP, Tablet, iPad, Laptop, PC)
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 22px;
+  }
+  .gridCard {
+    padding: 14px;
+  }
+  .hint {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .toolbar {
+    padding: 12px;
+    gap: 8px;
+  }
+  .toolBtn {
+    flex: 1 1 calc(50% - 8px);
+    text-align: center;
+    padding: 8px 10px;
+  }
+  .toolbarLabel {
+    width: 100%;
+    margin-bottom: 2px;
+  }
+  .legend {
+    padding: 12px;
+    gap: 12px;
+  }
+  .legendItems {
+    gap: 10px;
+  }
+}
